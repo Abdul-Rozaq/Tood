@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../../hooks/useTheme';
 import { useTaskStore } from '../../store/taskStore';
@@ -15,6 +15,8 @@ import SearchModal from '../../components/task/SearchModal';
 import TaskActions from '../../components/task/TaskActions';
 import TasksOverview from '../../components/task/TasksOverview';
 import SortModal from '../../components/task/SortModal';
+import MicIcon from '../../components/icons/MicIcon';
+import VoiceInputModal from '../../components/task/VoiceInputModal';
 
 export default function HomeScreen() {
   const { colors } = useTheme();
@@ -23,6 +25,7 @@ export default function HomeScreen() {
 
   const [sortModalVisible, setSortModalVisible] = useState(false);
   const [searchModalVisible, setSearchModalVisible] = useState(false);
+  const [voiceModalVisible, setVoiceModalVisible] = useState(false);
 
   const tasks = useTaskStore(state => state.tasks);
   const toggleTask = useTaskStore(state => state.toggleTask);
@@ -43,6 +46,14 @@ export default function HomeScreen() {
 
   const handleToggleTask = (taskId: string) => {
     toggleTask(taskId);
+  };
+
+  const handleTasksCreated = (count: number) => {
+    Alert.alert(
+      'Success',
+      `${count} task${count !== 1 ? 's' : ''} created from voice input!`,
+      [{ text: 'OK' }],
+    );
   };
 
   return (
@@ -90,15 +101,26 @@ export default function HomeScreen() {
         />
       </ScrollView>
 
-      {/* Floating Add Button */}
-      <Pressable
-        style={[styles.fab, { backgroundColor: colors.primary }]}
-        onPress={() =>
-          navigation.navigate(_APP_ROUTES.NEW_TODO_SCREEN as never)
-        }
-      >
-        <PlusIcon size="20" />
-      </Pressable>
+      {/* Floating Action Buttons */}
+      <View style={styles.fabContainer}>
+        {/* Voice Input FAB */}
+        <Pressable
+          style={[styles.fabSecondary, { backgroundColor: colors.primary }]}
+          onPress={() => setVoiceModalVisible(true)}
+        >
+          <MicIcon color={'white'} size={'20'} />
+        </Pressable>
+
+        {/* Add Task FAB */}
+        <Pressable
+          style={[styles.fab, { backgroundColor: colors.primary }]}
+          onPress={() =>
+            navigation.navigate(_APP_ROUTES.NEW_TODO_SCREEN as never)
+          }
+        >
+          <PlusIcon size="20" color="white" />
+        </Pressable>
+      </View>
 
       {/* Search Modal */}
       <SearchModal
@@ -111,6 +133,13 @@ export default function HomeScreen() {
       <SortModal
         visible={sortModalVisible}
         onClose={() => setSortModalVisible(false)}
+      />
+
+      {/* Voice Input Modal */}
+      <VoiceInputModal
+        visible={voiceModalVisible}
+        onClose={() => setVoiceModalVisible(false)}
+        onTasksCreated={handleTasksCreated}
       />
     </SafeAreaView>
   );
@@ -126,15 +155,28 @@ const getStyles = (colors: ThemeColors) =>
     header: {
       alignItems: 'flex-end',
     },
-    fab: {
+
+    fabContainer: {
+      position: 'absolute',
       bottom: 24,
       right: 24,
+      alignItems: 'flex-end',
+      gap: 16,
+    },
+    fab: {
       width: 56,
       height: 56,
       borderRadius: 28,
-      position: 'absolute',
       alignItems: 'center',
       justifyContent: 'center',
       ...shadowStyles.lg,
+    },
+    fabSecondary: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      alignItems: 'center',
+      justifyContent: 'center',
+      ...shadowStyles.md,
     },
   });

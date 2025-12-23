@@ -33,9 +33,9 @@ export default function TaskList({
   return (
     <View style={styles.tasksContainer}>
       <Text style={styles.tasksHeader}>{title}</Text>
-      {sortedTasks.map(task => (
+      {sortedTasks.map((task, i) => (
         <TaskCard
-          key={task.id}
+          key={i}
           task={task}
           onPress={() => handleTaskPress(task.id)}
           onToggle={() => handleToggleTask(task.id)}

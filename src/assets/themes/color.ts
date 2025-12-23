@@ -1,5 +1,6 @@
 export const lightColors = {
   light: '#FFFFFF',
+  white: '#FFFFFF',
   primary: '#007AFF',
   background: '#F5F7FA',
   card: '#F2F2F7',
@@ -26,6 +27,7 @@ export const darkColors = {
   gray: '#8E8E93',
   yellow: '#FFCC00',
   light: '#000000',
+  white: '#FFFFFF',
 } as const;
 
 export type ThemeColors = typeof lightColors | typeof darkColors;
