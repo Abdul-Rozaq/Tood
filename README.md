@@ -1,11 +1,17 @@
-# 📱 Project Name
+# 📱 TOOD
 
-A React Native application that leverages OpenAI-powered features via a secure API setup.
+A simple T0-Do List App in React native
 
 ---
 
 ## ✨ Features
 
+- Add Tasks
+- Mark tasks as complete/incomplete
+- Delete tasks
+- View a list of task
+- Persist data locally
+- Sorting and search
 - Intelligent task parsing
 - Date & time extraction
 - Clean, mobile-friendly UI
